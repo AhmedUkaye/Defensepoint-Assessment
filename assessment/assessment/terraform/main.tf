@@ -59,28 +59,6 @@ resource "aws_route_table_association" "private_assoc" {
   route_table_id = aws_route_table.private_rt.id
 }
  
-resource "aws_iam_role" "ssm_role" {
-  name = "EC2_SSM_Role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Principal = { Service = "ec2.amazonaws.com" },
-      Action = "sts:AssumeRole"
-    }]
-  })
-}
- 
-resource "aws_iam_role_policy_attachment" "ssm_attach" {
-  role       = aws_iam_role.ssm_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
- 
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "EC2SSMProfile"
-  role = aws_iam_role.ssm_role.name
-}
- 
 resource "aws_security_group" "ec2_sg" {
   name        = "wazuh-sg"
   description = "Allow internal Wazuh traffic"
